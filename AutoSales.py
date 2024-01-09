@@ -22,6 +22,18 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
+st.markdown(
+    """
+<style>
+.sidebar .sidebar-content {
+    background-colour: rgbat(238,232,170,0.8);
+    color: white;
+}
+</style>
+""",
+    unsafe_allow_html=True
+)
 st.markdown("""
 <style>
 div[data-testid="column"] {
