@@ -36,7 +36,7 @@ st.markdown(
 st.markdown("""
 <style>
 div[data-testid="column"] {
-   background-color: rgba(255,255,0, 0.6);
+   background-color: rgba(255,255,0, 0.9);
    border: 3px solid rgba(255,69,0,0.9);
    padding: 5% 2% 7% 1%;
    border-radius:7px;
