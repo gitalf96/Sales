@@ -25,13 +25,12 @@ st.markdown(
 
 st.markdown(
     """
-<style>
-.sidebar .sidebar-content {
-    background-colour: rgbat(238,232,170,0.8);
-    color: white;
-}
-</style>
-""",
+    <style>
+    div[data-testid="stSidebar"] {
+        background-colour: rgba(255,69,0,0.8);
+            }
+    </style>
+    """,
     unsafe_allow_html=True
 )
 st.markdown("""
