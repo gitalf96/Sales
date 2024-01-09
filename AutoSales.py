@@ -83,7 +83,7 @@ if selected=="KPI and Tables":
         col2.metric(label="No. of Product",
                     value=df.ORDERNUMBER.count())
         
-        st.subheader("Sales from Each Quarter")
+        st.subheader(":green[Sales from Each Quarter]")
 
         a=df.query("Month==['Jan','Feb','Mar']")["SALES"].sum()
         b=df.query("Month==['Apr','May','Jun']")["SALES"].sum()
