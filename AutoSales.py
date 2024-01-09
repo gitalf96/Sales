@@ -26,10 +26,13 @@ st.markdown(
 st.markdown(
     """
     <style>
-    div[data-testid="stSidebar"] {
-        background-colour: rgba(255,69,0,0.8);
-            }
+    section[data-testid="stSidebar"] 
+    div[class="st-emotion-cache-u5opgr eczjsme11"]{
+    background-image: linear-gradient(#8993ab,#8993ab);
+    color: white
+    }
     </style>
+    
     """,
     unsafe_allow_html=True
 )
