@@ -60,12 +60,16 @@ div[data-testid="element-container"] > label[data-testid="stMetricLabel"] > div 
 df=pd.read_csv('Auto Sales data.csv')
 # df.head()
 # df.shape
-# df.info()
+df.info()
 # df['MSRP'].describe()
 df.isnull().sum()
+df['order_status']=df['STATUS'].map({'Shipped':1,'Cancelled':2,'Resolved':3,'On Hold':4,'In Process':5,
+                                     'Disputed':6})
+df['order_status']=round(df['order_status'])
+df.order_status = df.order_status.astype('int64') 
 
 
-# print(round(v))
+
 
 
 with st.sidebar:
@@ -73,7 +77,7 @@ with st.sidebar:
         menu_title="Menu",
         options=["KPI and Tables","Charts"],
         icons=["table","bar-chart"],
-        menu_icon="cast",
+        menu_icon="house",
         default_index=0,
     )
 
@@ -91,35 +95,54 @@ df = df[df["Year"] == Year_filter]
 if selected=="KPI and Tables":
 
     with placeholder.container():
-        col1,col2=st.columns(2)
-        col1.metric(label="Sales for each product",
-               value=sum(df.SALES))
-        col2.metric(label="No. of Product",
-                    value=df.ORDERNUMBER.count())
+
+        d1,d2,d3=st.tabs(["Product Stats","Quarterly Sales","Order Status"])
+
         
-        st.subheader(":green[Sales from Each Quarter]")
 
-        a=df.query("Month==['Jan','Feb','Mar']")["SALES"].sum()
-        b=df.query("Month==['Apr','May','Jun']")["SALES"].sum()
-        c=df.query("Month==['Jul','Aug','Sep']")["SALES"].sum()
-        d=df.query("Month==['Oct','Nov','Dec']")["SALES"].sum()
+        with d1:
 
-        col1,col2,col3,col4 = st.columns(4)
-        col1.metric(label="First Quarter",
-        value=round(a))
-        col2.metric(label="Second Quarter",
-                value=round(b))
-        col3.metric(label="Third Quarter",
-        value=round(c))
-        col4.metric(label="Fourth Quarter",
-                value=round(d))
+            col1,col2=st.columns(2)
+            col1.metric(label="Sales for each product",
+                value=round(sum(df.SALES)-df.query("STATUS==['Cancelled']")["SALES"].sum()))
+            col2.metric(label="No. of Product",
+                        value=df.ORDERNUMBER.count())
+        
+        with d2:
+            st.subheader("Sales from Each Quarter")
+            
+            a=df.query("Month==['Jan','Feb','Mar']")["SALES"].sum() 
+            b=df.query("Month==['Apr','May','Jun']")["SALES"].sum()-df.query("Month==['Apr','May','Jun'] and STATUS==['Cancelled']")["SALES"].sum() 
+            c=df.query("Month==['Jul','Aug','Sep']")["SALES"].sum()
+            d=df.query("Month==['Oct','Nov','Dec']")["SALES"].sum()-df.query("Month==['Oct','Nov','Dec'] and STATUS==['Cancelled']")["SALES"].sum() 
+
+            col1,col2,col3,col4 = st.columns(4)
+            col1.metric(label="First Quarter",
+            value=round(a))
+            col2.metric(label="Second Quarter",
+                    value=round(b))
+            col3.metric(label="Third Quarter",
+            value=round(c))
+            col4.metric(label="Fourth Quarter",
+                    value=round(d))
        
+            st.subheader("Sales in each Country")
+                     
+            st.dataframe(df.groupby("COUNTRY")["SALES"].sum())
+
+        with d3:
+         
+            st.table(df.STATUS.value_counts())
+
+            
+             
+
 
 
 if selected=="Charts":
     
 
-    c1,c2=st.tabs(["No.of Orders in Under Each Category","Sales in"])
+    c1,c2,c3=st.tabs(["No.of Orders in Under Each Category","Sales Trend","Products Ordered by Each Country"])
 
     chart = alt.Chart(df).mark_bar().encode(
         x='DEALSIZE',
@@ -130,6 +153,7 @@ if selected=="Charts":
     with c1:
             st.altair_chart(chart, theme="streamlit", use_container_width=True)
 
+    Sales_Amount=round(sum(df.SALES)-df.query("STATUS==['Cancelled']")["SALES"].sum())
     bart = alt.Chart(df,title="Sales Trend across the months" ).mark_line().encode(
         x='Month',
         y='sum(SALES)',
@@ -140,7 +164,23 @@ if selected=="Charts":
             st.altair_chart(bart,theme=None, use_container_width=True)
 
 
-        
+    base = alt.Chart(df).mark_arc().encode(
+        theta='count(ORDERNUMBER)',
+        color="COUNTRY",
+        ).interactive()
+    # base.mark_bar() + base.mark_text(align='left', dx=2)
+
+    with c3:
+         st.altair_chart(base,theme="streamlit",use_container_width=True)
+
+
+ 
+
+
+
+
+
+
 
 
 
