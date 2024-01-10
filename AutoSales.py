@@ -109,7 +109,7 @@ if selected=="KPI and Tables":
                         value=df.ORDERNUMBER.count())
         
         with d2:
-            st.subheader("Sales from Each Quarter")
+            st.subheader("**:orange[Sales from Each Quarter]**")
             
             a=df.query("Month==['Jan','Feb','Mar']")["SALES"].sum() 
             b=df.query("Month==['Apr','May','Jun']")["SALES"].sum()-df.query("Month==['Apr','May','Jun'] and STATUS==['Cancelled']")["SALES"].sum() 
@@ -126,13 +126,13 @@ if selected=="KPI and Tables":
             col4.metric(label="Fourth Quarter",
                     value=round(d))
        
-            st.subheader("Sales in each Country")
+            st.subheader("**:orange[Sales in each Country]**")
                      
             st.dataframe(df.groupby("COUNTRY")["SALES"].sum())
 
         with d3:
          
-            st.table(df.STATUS.value_counts())
+            st.dataframe(df.STATUS.value_counts())
 
             
              
